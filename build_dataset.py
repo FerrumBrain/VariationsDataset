@@ -424,7 +424,9 @@ def shuffle(sections_events):
     return shuffled_events, shuffled_phrases
 
 def merge(events1, events2):
-    res = events1[0].copy()
+    res = {}
+    for e in events1[0].keys():
+        res[e] = events1[0][e].copy()
     t = max([max(list(map(lambda e: e.global_time, events1[0][track])) if len(events1[0][track]) > 0 else [-1]) for track in events1[0].keys()])
     res["SEPARATOR"] = [Event(t, Message("note_on", note=0, velocity=1, channel=0, time=0)), 
                         Event(t + 1, Message("note_on", note=0, velocity=0, channel=0, time=0))]

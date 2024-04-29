@@ -39,7 +39,8 @@ for i in range(1, 910):
 
     all_events = []
     for k in range(max_section + 1):
-        midi = MidiFile(filename(output_dir, i, to_3_str(i) + '_section_' + str(k)), clip=True)
+        name = filename(output_dir, i, to_3_str(i) + '_section_' + str(k))
+        midi = MidiFile(name, clip=True)
         all_events.append([{}, 0])
         for track in midi.tracks:
             all_events[-1][0][track.name] = to_events(track)
@@ -52,8 +53,8 @@ for i in range(1, 910):
 
     for ind1, e1 in enumerate(all_events):
         for ind2, e2 in enumerate(all_events):
-            # if i != 845 or ind1 >= len(all_events) / 2:
-            #     continue
+            if i != 845: # or ind1 >= len(all_events) / 2
+                continue
             is_written = ''
             for coef in coefficients:
                 flag = False
@@ -63,7 +64,7 @@ for i in range(1, 910):
                     if is_written != '':
                         shutil.copy2(is_written, path) 
                     else:
-                        tmp = to_midi(merge(e1, e2))
+                        tmp = to_midi(merge(e1.copy(), e2.copy()))
                         tmp.save(path)
                     is_written = path
                     melody[coef].append([ind1, ind2])
@@ -73,7 +74,7 @@ for i in range(1, 910):
                     if is_written != '':
                         shutil.copy2(is_written, path) 
                     else:
-                        tmp = to_midi(merge(e1, e2))
+                        tmp = to_midi(merge(e1.copy(), e2.copy()))
                         tmp.save(path)
                     is_written = path
                     sorted_phrases[coef].append([ind1, ind2])
@@ -83,7 +84,7 @@ for i in range(1, 910):
                     if is_written != '':
                         shutil.copy2(is_written, path) 
                     else:
-                        tmp = to_midi(merge(e1, e2))
+                        tmp = to_midi(merge(e1.copy(), e2.copy()))
                         tmp.save(path)
                     is_written = path
                     phrases[coef].append([ind1, ind2])
