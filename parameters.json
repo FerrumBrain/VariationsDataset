@@ -1,0 +1,5 @@
+{
+    "create_dataset": true,
+    "input_midi_dir": "../POP909-Dataset/POP909/",
+    "output_dir": "POP909/"
+}

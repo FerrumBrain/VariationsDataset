@@ -13,6 +13,8 @@ class Event:
         return f"({self.global_time}, {self.message})"
 
 def to_3_str(i):
+    if type(i) == str:
+        return i
     if i < 10:
         return '00' + str(i)
     if i < 100:

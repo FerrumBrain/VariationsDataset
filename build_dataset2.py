@@ -2,6 +2,7 @@ from build_dataset import filename, coefficients, to_midi, merge, to_3_str, to_e
 import shutil
 import json
 from mido import MidiFile
+import os
 
 json_path = 'parameters.json'
 with open(json_path, 'r') as params_file:
@@ -43,14 +44,22 @@ for i in range(1, 910):
         for track in midi.tracks:
             all_events[-1][0][track.name] = to_events(track)
 
+    if not os.path.exists(filename(output_dir, "sections_levenshtein", "", extension="/")):
+        for coef in coefficients:
+            os.makedirs(filename(output_dir, "sections_levenshtein/" + str(coef), "", extension="/"))
+            os.makedirs(filename(output_dir, "sorted_sections_levenshtein/" + str(coef), "", extension="/"))
+            os.makedirs(filename(output_dir, "melody_levenshtein/" + str(coef), "", extension="/"))
+
     for ind1, e1 in enumerate(all_events):
         for ind2, e2 in enumerate(all_events):
+            # if i != 845 or ind1 >= len(all_events) / 2:
+            #     continue
             is_written = ''
             for coef in coefficients:
                 flag = False
                 if [ind1, ind2] in variatons_levenshtein_melody[coef]:
                     flag = True
-                    path = filename(output_dir, i, str(coef) + "/" + "melody_levenshtein" + "/" + to_3_str(i) + "_" + str(ind1) + "-" + str(ind2), ".midi")
+                    path = filename(output_dir, "melody_levenshtein/" + str(coef), to_3_str(i) + "_" + str(ind1) + "-" + str(ind2), ".midi")
                     if is_written != '':
                         shutil.copy2(is_written, path) 
                     else:
@@ -60,7 +69,7 @@ for i in range(1, 910):
                     melody[coef].append([ind1, ind2])
                 if [ind1, ind2] in variations_sorted_levenshtein[coef]:
                     flag = True
-                    path = filename(output_dir, i, str(coef) + "/" + "sorted_sections_levenshtein" + "/" + to_3_str(i) + "_" + str(ind1) + "-" + str(ind2), ".midi")
+                    path = filename(output_dir, "sorted_sections_levenshtein/" + str(coef), to_3_str(i) + "_" + str(ind1) + "-" + str(ind2), ".midi")
                     if is_written != '':
                         shutil.copy2(is_written, path) 
                     else:
@@ -70,7 +79,7 @@ for i in range(1, 910):
                     sorted_phrases[coef].append([ind1, ind2])
                 if [ind1, ind2] in variations_levenshtein[coef]:
                     flag = True
-                    path = filename(output_dir, i, str(coef) + "/" + "sections_levenshtein" + "/" + to_3_str(i) + "_" + str(ind1) + "-" + str(ind2), ".midi")
+                    path = filename(output_dir, "sections_levenshtein/" + str(coef), to_3_str(i) + "_" + str(ind1) + "-" + str(ind2), ".midi")
                     if is_written != '':
                         shutil.copy2(is_written, path) 
                     else:
